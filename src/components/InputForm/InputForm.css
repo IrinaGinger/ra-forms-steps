@@ -1,0 +1,41 @@
+.steps-form {
+    display: inline-flex;
+    align-items: flex-end;
+}
+
+.steps-form-field {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+
+    padding: 10px;
+}
+
+.steps-form-input {
+    font-family: inherit;
+    width: 160px;
+    margin-top: 10px;
+    color: inherit;
+}
+
+.steps-form-input::-webkit-inner-spin-button,
+.steps-form-input::-webkit-outer-spin-button {
+    display: none;
+}
+
+.date::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.steps-form-input,
+.steps-form-button {
+    box-sizing: border-box;
+    border: 2px solid #808080;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.steps-form-button {
+    width: 70px;
+    background-color: #ffffff;
+}
