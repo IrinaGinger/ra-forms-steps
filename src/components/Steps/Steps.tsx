@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { InputForm } from '../InputForm/InputForm.tsx';
 import { OutputTable } from '../OutputTable/OutputTable.tsx';
 
-import randomString from '../../utils/randomstring.tsx';
 import getTime from '../../utils/gettime.tsx';
 
 import { IForm, ISteps } from '../../interfaces.ts';
@@ -11,66 +10,54 @@ import { IForm, ISteps } from '../../interfaces.ts';
 import './Steps.css';
 
 export const Steps = () => {
-    const [form, setForm] = useState<IForm>({
-        date: "",
-        distance: 0,
-    });
-
     const [data, setData] = useState<ISteps[]>([]);
-    
-    function handleFormSubmit(form: IForm) {
-        const actualStepsData: ISteps[] = data;
+        
+    function handleSubmit(form: IForm) {
+        let actualStepsData: ISteps[];        
 
         const index = data.findIndex(
             (item) => getTime(item.date) <= getTime(form.date)
         );
 
         if (index === -1) {
-            actualStepsData.push( 
+            actualStepsData = [
+                ...data,
                 {
-                    id: randomString(10),
+                    id: String(Date.now()),
                     date: form.date,
                     distance: form.distance,
-                },
-            );
+                }
+            ];
         } else if (getTime(data[index].date) === getTime(form.date)) {
-            actualStepsData.splice(index, 1, 
+            actualStepsData = [
+                ...data.slice(0, index),
                 {
                     id: data[index].id,
                     date: data[index].date,
-                    distance: +data[index].distance + +form.distance,
-                }
-            )
+                    distance: String(+data[index].distance + +form.distance),
+                },
+                ...data.slice(index + 1),
+            ];
         } else {
-            actualStepsData.splice(index, 0, 
+            actualStepsData = [
+                ...data.slice(0, index),
                 {
-                    id: randomString(10),
+                    id: String(Date.now()),
                     date: form.date,
                     distance: form.distance,
                 },
-            );
+                ...data.slice(index),
+            ]
         }
-
+        
         setData(actualStepsData);
-
-        setForm({ date: '', distance: 0 });
-    }
-
-    function handleFormChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = e.target;
-
-        setForm(prevForm => ({ ...prevForm, [name]: value }));
     }
 
     function handleDelete(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         const id = (e.target as Element).id;
-        const index = data.findIndex((item) => item.id === id);
-        
-        const actualStepsData: ISteps[] = data;
-        actualStepsData.splice(index, 1);
-
-        console.log(actualStepsData);
+               
+        const actualStepsData: ISteps[] = data.filter(item => item.id !== id);
 
         setData(actualStepsData);
     }
@@ -78,9 +65,7 @@ export const Steps = () => {
     return (
         <div className="steps-wrapper">
             <InputForm
-                onSubmit={handleFormSubmit}
-                onChange={handleFormChange}
-                form={form}
+                onSubmit={handleSubmit}
             />
             <OutputTable
                 data={data}

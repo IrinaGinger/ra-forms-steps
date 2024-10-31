@@ -1,18 +1,16 @@
 export interface IForm {
     date: string;
-    distance: number;
+    distance: string;
 }
 
 export interface IFormProps {
     onSubmit: (form: IForm) => void,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-    form: IForm,
 }
 
 export interface ISteps {
     id: string,
     date: string,
-    distance: number,
+    distance: string,
 };
 
 export interface IStepsProps {

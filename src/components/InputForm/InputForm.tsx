@@ -1,20 +1,29 @@
-import { IFormProps } from '../../interfaces.ts';
+import { useState } from 'react'; 
+import { IForm, IFormProps } from '../../interfaces.ts';
 
 import './InputForm.css';
 
 export const InputForm = (props: IFormProps) => {
-    const {
-        onSubmit: handleFormSubmit,
-        onChange: handleInputChange,
-        form,
-    } = props;
+    const { onSubmit: handleSubmit } = props;
+
+    const [form, setForm] = useState<IForm>({
+        date: "",
+        distance: "0",
+    });    
+    
+    function handleFormChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const { name, value } = e.target;
+
+        setForm(prevForm => ({ ...prevForm, [name]: value }));
+    }
 
     return (
         <form
             className="steps-form"
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
-                handleFormSubmit(form);
+                handleSubmit(form);
+                setForm({ date: '', distance: "0" });
             }}
         >
             <div className="steps-form-field">
@@ -28,7 +37,7 @@ export const InputForm = (props: IFormProps) => {
                     max="2050-12-31"
                     required
                     value={form.date}
-                    onChange={handleInputChange}
+                    onChange={handleFormChange}
                 />
             </div>
             <div className="steps-form-field">
@@ -42,14 +51,11 @@ export const InputForm = (props: IFormProps) => {
                     max="100"
                     required
                     value={form.distance}
-                    onChange={handleInputChange}
+                    onChange={handleFormChange}
                 />
             </div>
             <div className="steps-form-field">
-                <button
-                    className="steps-form-button"
-                    type="submit"
-                >
+                <button className="steps-form-button" type="submit">
                     OK
                 </button>
             </div>
